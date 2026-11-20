@@ -346,6 +346,8 @@ internal fun SeekbarWithTimers(
   timerTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   // A live broadcast has no meaningful end, so the duration timer becomes a LIVE badge.
   isLive: Boolean = false,
+  // Shows a frame preview above the seekbar while it is scrubbed. Video playback only.
+  thumbnailPreview: Boolean = false,
   centerContent: @Composable () -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
@@ -413,6 +415,7 @@ internal fun SeekbarWithTimers(
         onValueChangeFinished = onValueChangeFinished,
         scope = scope,
         animatedPosition = animatedPosition,
+        thumbnailPreview = thumbnailPreview,
         modifier = Modifier.fillMaxWidth().height(if (showWavyVisualizer) 64.dp else 44.dp),
       )
 
@@ -491,6 +494,7 @@ internal fun SeekbarWithTimers(
         onValueChangeFinished = onValueChangeFinished,
         scope = scope,
         animatedPosition = animatedPosition,
+        thumbnailPreview = thumbnailPreview,
         modifier = Modifier.weight(1f).height(if (showWavyVisualizer) 64.dp else 48.dp),
       )
 
@@ -539,6 +543,7 @@ private fun SeekbarContent(
   animatedPosition: Animatable<Float, *>,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
   showClipRange: Boolean = true,
+  thumbnailPreview: Boolean = false,
   modifier: Modifier = Modifier,
 ) {
   val touchAreaHeight = if (isPortrait) 64.dp else 52.dp
@@ -894,6 +899,15 @@ private fun SeekbarContent(
           .height(touchAreaHeight)
           .graphicsLayer(alpha = 0f),
     )
+
+    if (thumbnailPreview && safeDuration > 0f) {
+      SeekbarThumbnailPreview(
+        visible = isUserInteracting,
+        positionSeconds = safeThumbPosition,
+        durationSeconds = safeDuration,
+        modifier = Modifier.matchParentSize(),
+      )
+    }
   }
 }
 

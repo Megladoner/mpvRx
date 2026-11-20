@@ -2203,6 +2203,7 @@ fun PlayerControls(
               loopEnd = abLoopB?.toFloat(),
               bufferDuration = stableDemuxerCacheTime.takeIf { showBufferedRange && it > 0f },
               isPortrait = isPortrait,
+              thumbnailPreview = true,
               modifier = Modifier.onSizeChanged { if (it.height > 0) bottomHeights.seekbar = it.height },
             )
           }
